@@ -13,7 +13,6 @@ import FullImage from "./FullImage";
 
 const SecondApp = () => {
   const dispatch = useDispatch();
-  const { status, error } = useSelector((state) => state.photos);
 
   useEffect(() => {
     dispatch(fetchPhotos());
@@ -21,6 +20,11 @@ const SecondApp = () => {
 
   const photos = useSelector((state) => state.photos.photos);
 
+  const [pressId, setPressId] = useState("");
+
+  const handleImagePress = (identifier) => {
+    setPressId(identifier);
+  };
   const styles = StyleSheet.create({
     image: {
       width: "auto",
@@ -36,12 +40,9 @@ const SecondApp = () => {
       fontSize: 16,
     },
     cart: {
-      borderStyle: "solid",
-      borderColor: "black",
-      borderWidth: 1,
-      display: "flex",
       margin: 10,
-      gap: 10,
+      display: "flex",
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
     },
@@ -60,35 +61,41 @@ const SecondApp = () => {
       fontSize: 18,
       fontWeight: "bold",
     },
+    textContainer: {
+      flex: 1,
+    },
+    text: {
+      paddingTop: 10,
+      paddingLeft: 10,
+      width: "100%",
+      color: "black",
+    },
   });
-
-  const [pressId, setPressId] = useState("");
-
-  const handleImagePress = (identifier) => {
-    setPressId(identifier);
-  };
 
   return (
     <View>
       <ScrollView>
         {photos.map((photo) => (
-          <TouchableOpacity
-            onPress={() => handleImagePress(photo.id)}
-            style={styles.cart}
-            key={photo.id}
-          >
-            <Text>Author: {photo.user.name}</Text>
-            <Image
-              style={{ width: 200, height: 200 }}
-              source={{ uri: photo.urls.raw }}
-            />
-            <Text>Description:</Text>
+          <View style={styles.cart} key={photo.id}>
+            <TouchableOpacity onPress={() => handleImagePress(photo.id)}>
+              <Image
+                style={{ width: 200, height: 200 }}
+                source={{ uri: photo.urls.full }}
+              />
+            </TouchableOpacity>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>Author:</Text>
 
-            <Text>
-              {photo.alt_description.charAt(0).toUpperCase() +
-                photo.alt_description.slice(1)}
-            </Text>
-          </TouchableOpacity>
+              <Text style={styles.text}>{photo.user.name}</Text>
+
+              <Text style={styles.text}>Description:</Text>
+
+              <Text style={styles.text}>
+                {photo.alt_description.charAt(0).toUpperCase() +
+                  photo.alt_description.slice(1)}
+              </Text>
+            </View>
+          </View>
         ))}
       </ScrollView>
       {pressId !== "" && (

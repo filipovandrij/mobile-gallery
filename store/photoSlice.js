@@ -12,11 +12,6 @@ export const fetchPhotos = createAsyncThunk(
   }
 );
 
-// const setError = (state, action) => {
-//   state.status = "rejected";
-//   state.error = action.payload;
-// };
-
 const photoSlice = createSlice({
   name: "photos",
   initialState: {
